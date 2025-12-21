@@ -48,7 +48,7 @@ class TokenTally:
         ...     response = anthropic.messages.create(...)
     """
 
-    DEFAULT_BASE_URL = "https://api.tokentally.io"
+    DEFAULT_BASE_URL = "https://api.tokentally.cloud"
 
     def __init__(
         self,
