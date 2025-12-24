@@ -87,14 +87,17 @@ class TokenTally:
 
     def track(
         self,
-        tokens_in: int,
-        tokens_out: int,
-        model: str,
+        tokens_in: int = 0,
+        tokens_out: int = 0,
+        model: str = "",
         provider: str = "anthropic",
         runtime_ms: Optional[int] = None,
         stop_reason: Optional[str] = None,
         error_message: Optional[str] = None,
         metadata: Optional[Dict[str, Any]] = None,
+        credits: Optional[int] = None,
+        resolution: Optional[str] = None,
+        quality: Optional[str] = None,
     ) -> UsageResponse:
         """Record usage data.
 
@@ -102,11 +105,14 @@ class TokenTally:
             tokens_in: Number of input tokens.
             tokens_out: Number of output tokens.
             model: The model name (e.g., 'claude-3-sonnet-20240229').
-            provider: The AI provider ('anthropic', 'openai', etc.).
+            provider: The AI provider ('anthropic', 'openai', 'leonardo', etc.).
             runtime_ms: Optional runtime in milliseconds.
             stop_reason: Optional stop reason from API.
             error_message: Optional error message if request failed.
             metadata: Optional custom metadata dict.
+            credits: Optional credits used (for image generation APIs like Leonardo).
+            resolution: Optional image resolution (e.g., '1024x1024').
+            quality: Optional image quality (e.g., 'standard', 'hd').
 
         Returns:
             UsageResponse with record ID and calculated cost.
@@ -121,6 +127,9 @@ class TokenTally:
             tokens_out=tokens_out,
             model=model,
             provider=provider,
+            credits=credits,
+            resolution=resolution,
+            quality=quality,
             runtime_ms=runtime_ms,
             stop_reason=stop_reason,
             error_message=error_message,
@@ -188,7 +197,7 @@ class TokenTally:
             ctx.runtime_ms = int((end_time - start_time) * 1000)
 
             # Only send if usage was set
-            if ctx.tokens_in is not None and ctx.tokens_out is not None:
+            if ctx.tokens_in is not None or ctx.tokens_out is not None or ctx.credits is not None:
                 ctx._send()
 
     def _send_usage(self, usage: UsageData) -> UsageResponse:
@@ -226,6 +235,9 @@ class UsageContext:
 
         self.tokens_in: Optional[int] = None
         self.tokens_out: Optional[int] = None
+        self.credits: Optional[int] = None
+        self.resolution: Optional[str] = None
+        self.quality: Optional[str] = None
         self.stop_reason: Optional[str] = None
         self.error_message: Optional[str] = None
         self.runtime_ms: Optional[int] = None
@@ -234,9 +246,12 @@ class UsageContext:
 
     def set_usage(
         self,
-        tokens_in: int,
-        tokens_out: int,
+        tokens_in: int = 0,
+        tokens_out: int = 0,
         stop_reason: Optional[str] = None,
+        credits: Optional[int] = None,
+        resolution: Optional[str] = None,
+        quality: Optional[str] = None,
     ) -> None:
         """Set usage data from API response.
 
@@ -244,9 +259,15 @@ class UsageContext:
             tokens_in: Number of input tokens.
             tokens_out: Number of output tokens.
             stop_reason: Optional stop reason.
+            credits: Optional credits used (for image generation APIs like Leonardo).
+            resolution: Optional image resolution (e.g., '1024x1024').
+            quality: Optional image quality (e.g., 'standard', 'hd').
         """
         self.tokens_in = tokens_in
         self.tokens_out = tokens_out
+        self.credits = credits
+        self.resolution = resolution
+        self.quality = quality
         self.stop_reason = stop_reason
 
     @property
@@ -256,14 +277,14 @@ class UsageContext:
 
     def _send(self) -> None:
         """Send usage data to API."""
-        if self.tokens_in is None or self.tokens_out is None:
-            return
-
         usage = UsageData(
-            tokens_in=self.tokens_in,
-            tokens_out=self.tokens_out,
+            tokens_in=self.tokens_in or 0,
+            tokens_out=self.tokens_out or 0,
             model=self.model,
             provider=self.provider,
+            credits=self.credits,
+            resolution=self.resolution,
+            quality=self.quality,
             runtime_ms=self.runtime_ms,
             stop_reason=self.stop_reason,
             error_message=self.error_message,
