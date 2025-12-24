@@ -110,6 +110,39 @@ tt.track(
 )
 ```
 
+## Image Generation
+
+Track image generation APIs like Leonardo, DALL-E, and Midjourney using `credits`, `resolution`, and `quality` parameters:
+
+```python
+# Leonardo AI
+tt.track(
+    model="leonardo-phoenix",
+    provider="leonardo",
+    credits=15,
+    resolution="1024x1024",
+    quality="high",
+)
+
+# OpenAI DALL-E
+tt.track(
+    model="dall-e-3",
+    provider="openai",
+    resolution="1024x1024",
+    quality="hd",
+)
+
+# With context manager
+with tt.track_usage(model="leonardo-phoenix", provider="leonardo") as ctx:
+    response = leonardo.generate(prompt="A sunset over mountains")
+
+    ctx.set_usage(
+        credits=response.credits_used,
+        resolution="1024x1024",
+        quality="high",
+    )
+```
+
 ## License
 
 MIT License - see LICENSE for details.

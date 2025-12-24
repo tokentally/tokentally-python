@@ -13,6 +13,9 @@ class UsageData:
     tokens_out: int
     model: str
     provider: str = "anthropic"
+    credits: Optional[int] = None
+    resolution: Optional[str] = None
+    quality: Optional[str] = None
     runtime_ms: Optional[int] = None
     stop_reason: Optional[str] = None
     error_message: Optional[str] = None
@@ -28,6 +31,13 @@ class UsageData:
             "provider": self.provider,
             "metadata": self.metadata,
         }
+
+        if self.credits is not None:
+            data["credits"] = self.credits
+        if self.resolution is not None:
+            data["resolution"] = self.resolution
+        if self.quality is not None:
+            data["quality"] = self.quality
 
         if self.runtime_ms is not None:
             data["runtime_ms"] = self.runtime_ms
