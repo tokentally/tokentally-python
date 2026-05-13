@@ -91,6 +91,9 @@ class TokenTally:
         tokens_out: int = 0,
         model: str = "",
         provider: str = "anthropic",
+        cost_usd: Optional[float] = None,
+        cache_read_input_tokens: int = 0,
+        cache_creation_input_tokens: int = 0,
         runtime_ms: Optional[int] = None,
         stop_reason: Optional[str] = None,
         error_message: Optional[str] = None,
@@ -106,6 +109,10 @@ class TokenTally:
             tokens_out: Number of output tokens.
             model: The model name (e.g., 'claude-3-sonnet-20240229').
             provider: The AI provider ('anthropic', 'openai', 'leonardo', etc.).
+            cost_usd: Optional actual cost from the LLM response. If provided,
+                this is used instead of server-side pricing table calculation.
+            cache_read_input_tokens: Tokens read from prompt cache (reduced rate).
+            cache_creation_input_tokens: Tokens written to prompt cache.
             runtime_ms: Optional runtime in milliseconds.
             stop_reason: Optional stop reason from API.
             error_message: Optional error message if request failed.
@@ -115,7 +122,7 @@ class TokenTally:
             quality: Optional image quality (e.g., 'standard', 'hd').
 
         Returns:
-            UsageResponse with record ID and calculated cost.
+            UsageResponse with record ID and cost.
 
         Raises:
             RateLimitError: If rate limit is exceeded.
@@ -127,6 +134,9 @@ class TokenTally:
             tokens_out=tokens_out,
             model=model,
             provider=provider,
+            cost_usd=cost_usd,
+            cache_read_input_tokens=cache_read_input_tokens,
+            cache_creation_input_tokens=cache_creation_input_tokens,
             credits=credits,
             resolution=resolution,
             quality=quality,
@@ -235,6 +245,9 @@ class UsageContext:
 
         self.tokens_in: Optional[int] = None
         self.tokens_out: Optional[int] = None
+        self.cost_usd: Optional[float] = None
+        self.cache_read_input_tokens: int = 0
+        self.cache_creation_input_tokens: int = 0
         self.credits: Optional[int] = None
         self.resolution: Optional[str] = None
         self.quality: Optional[str] = None
@@ -249,6 +262,9 @@ class UsageContext:
         tokens_in: int = 0,
         tokens_out: int = 0,
         stop_reason: Optional[str] = None,
+        cost_usd: Optional[float] = None,
+        cache_read_input_tokens: int = 0,
+        cache_creation_input_tokens: int = 0,
         credits: Optional[int] = None,
         resolution: Optional[str] = None,
         quality: Optional[str] = None,
@@ -259,12 +275,18 @@ class UsageContext:
             tokens_in: Number of input tokens.
             tokens_out: Number of output tokens.
             stop_reason: Optional stop reason.
+            cost_usd: Optional actual cost from the LLM response.
+            cache_read_input_tokens: Tokens read from prompt cache.
+            cache_creation_input_tokens: Tokens written to prompt cache.
             credits: Optional credits used (for image generation APIs like Leonardo).
             resolution: Optional image resolution (e.g., '1024x1024').
             quality: Optional image quality (e.g., 'standard', 'hd').
         """
         self.tokens_in = tokens_in
         self.tokens_out = tokens_out
+        self.cost_usd = cost_usd
+        self.cache_read_input_tokens = cache_read_input_tokens
+        self.cache_creation_input_tokens = cache_creation_input_tokens
         self.credits = credits
         self.resolution = resolution
         self.quality = quality
@@ -282,6 +304,9 @@ class UsageContext:
             tokens_out=self.tokens_out or 0,
             model=self.model,
             provider=self.provider,
+            cost_usd=self.cost_usd,
+            cache_read_input_tokens=self.cache_read_input_tokens,
+            cache_creation_input_tokens=self.cache_creation_input_tokens,
             credits=self.credits,
             resolution=self.resolution,
             quality=self.quality,
