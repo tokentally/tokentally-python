@@ -10,7 +10,7 @@ readme = "README.md"
 license = "MIT"
 requires-python = ">=3.8"
 authors = [
-    { name = "TokenTally", email = "support@tokentally.io" }
+    { name = "TokenTally", email = "support@tokentally.cloud" }
 ]
 classifiers = [
     "Development Status :: 4 - Beta",

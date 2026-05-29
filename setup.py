@@ -11,7 +11,7 @@ setup(
     name="tokentally",
     version=version,
     author="TokenTally",
-    author_email="support@tokentally.io",
+    author_email="support@tokentally.cloud",
     description="Track AI API usage with TokenTally",
     long_description=long_description,
     long_description_content_type="text/markdown",

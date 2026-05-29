@@ -14,8 +14,8 @@ class UsageData:
     model: str
     provider: str = "anthropic"
     cost_usd: Optional[float] = None
-    cache_read_input_tokens: int = 0
-    cache_creation_input_tokens: int = 0
+    cache_read_input_tokens: Optional[int] = 0
+    cache_creation_input_tokens: Optional[int] = 0
     credits: Optional[int] = None
     resolution: Optional[str] = None
     quality: Optional[str] = None
@@ -37,9 +37,9 @@ class UsageData:
 
         if self.cost_usd is not None:
             data["cost_usd"] = self.cost_usd
-        if self.cache_read_input_tokens:
+        if self.cache_read_input_tokens is not None and self.cache_read_input_tokens > 0:
             data["cache_read_input_tokens"] = self.cache_read_input_tokens
-        if self.cache_creation_input_tokens:
+        if self.cache_creation_input_tokens is not None and self.cache_creation_input_tokens > 0:
             data["cache_creation_input_tokens"] = self.cache_creation_input_tokens
         if self.credits is not None:
             data["credits"] = self.credits
