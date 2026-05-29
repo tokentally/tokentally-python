@@ -1,6 +1,6 @@
 # TokenTally Python SDK
 
-Track your AI API usage with TokenTally. Get real-time analytics, cost tracking, and usage insights for Claude, OpenAI, and other AI providers.
+Track your AI API usage with [TokenTally](https://tokentally.cloud). Get real-time analytics, cost tracking, and usage insights for Claude, OpenAI, and other AI providers.
 
 ## Installation
 
@@ -69,7 +69,7 @@ print(f"Cost: ${ctx.response.cost_usd:.6f}")
 ```python
 tt = TokenTally(
     api_key="tt_your_api_key",
-    base_url="https://api.tokentally.io",  # Optional custom URL
+    base_url="https://api.tokentally.cloud",  # Optional custom URL
     timeout=30.0,  # Request timeout in seconds
 )
 ```
@@ -93,7 +93,7 @@ except TokenTallyError as e:
 
 ## Metadata
 
-Add custom metadata to categorize your usage:
+Add custom metadata to categorize your usage. The `application` and `feature` keys are special -- they appear as filterable dropdowns in the TokenTally dashboard, making it easy to break down usage by app or feature.
 
 ```python
 tt.track(
@@ -101,14 +101,16 @@ tt.track(
     tokens_out=200,
     model="claude-3-sonnet-20240229",
     metadata={
+        "application": "my-app",        # Filterable in dashboard
+        "feature": "chat_completion",    # Filterable in dashboard
         "user_id": "user123",
-        "feature_name": "chat_completion",
         "environment": "production",
-        "code_path": "services.chat.complete",
         "request_id": "abc-123",
     }
 )
 ```
+
+You can add any other key-value pairs to metadata for your own tracking purposes.
 
 ## Image Generation
 
