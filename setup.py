@@ -15,7 +15,10 @@ setup(
     description="Track AI API usage with TokenTally",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/tokentally/tokentally-python",
+    url="https://tokentally.cloud",
+    project_urls={
+        "Repository": "https://github.com/tokentally/tokentally-python",
+    },
     packages=find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",
