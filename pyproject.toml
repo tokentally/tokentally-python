@@ -36,7 +36,7 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/tokentally/tokentally-python"
+Homepage = "https://tokentally.cloud"
 Repository = "https://github.com/tokentally/tokentally-python"
 
 [tool.setuptools.dynamic]

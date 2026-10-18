@@ -2,6 +2,8 @@
 
 Track your AI API usage with [TokenTally](https://tokentally.cloud). Get real-time analytics, cost tracking, and usage insights for Claude, OpenAI, and other AI providers.
 
+Sign up and get your API key at **[tokentally.cloud](https://tokentally.cloud)** (Settings → API Keys).
+
 ## Installation
 
 ```bash
@@ -144,6 +146,12 @@ with tt.track_usage(model="leonardo-phoenix", provider="leonardo") as ctx:
         quality="high",
     )
 ```
+
+## Links
+
+- Website & dashboard: [tokentally.cloud](https://tokentally.cloud)
+- TypeScript SDK: [tokentally/tokentally-node](https://github.com/tokentally/tokentally-node)
+- Ruby SDK: [tokentally/tokentally-ruby](https://github.com/tokentally/tokentally-ruby)
 
 ## License
 
